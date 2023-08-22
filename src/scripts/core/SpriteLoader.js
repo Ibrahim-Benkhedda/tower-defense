@@ -1,15 +1,16 @@
 import * as PIXI from 'pixi.js';
+
 /**
  * Class for loading static and animated sprites resources
  */
-export class SpriteLoader {
+class SpriteLoader {
     constructor() {
         // cache for loaded resources, prevents redundant loading
         this.resources = {};
     }
 
     /**
-     * loads a texture from the path or returns the texture
+     * @desc loads a texture from the path or returns the texture
      * from cache (resources) if it has been loaded before.
      * @param {string} texturePath - path for the texture file
      * @returns {PIXI.Texture} - loaded texture
@@ -27,7 +28,7 @@ export class SpriteLoader {
     }
 
     /**
-     * loads a static sprite from the texture path
+     * @desc loads a static sprite from the texture path
      * @param {string} texturePath - path for the texture file 
      * @returns {PIXI.Sprite} - loaded static sprite 
      */
@@ -37,7 +38,7 @@ export class SpriteLoader {
     }
 
     /**
-     * loads an animated sprite from the JSON spritesheet data and texture path
+     * @desc loads an animated sprite from the JSON spritesheet data and texture path
      * @param {Object} jsonData - JSON object that contains the sprite frames
      * @param {string} texturePath - path for the texture file
      * @returns {PIXI.AnimatedSprite} - loaded animated sprite
@@ -62,3 +63,6 @@ export class SpriteLoader {
 
     
 }
+
+
+export const spriteLoader = new SpriteLoader();

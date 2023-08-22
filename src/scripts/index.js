@@ -1,12 +1,11 @@
-import * as PIXI from "pixi.js"
-import bgImage from '../assets/sprites/bg.png'; // import the image
+import * as PIXI from 'pixi.js';
+import { App } from './core/App.js';
+import { Game } from './core/Game.js';
+import { GameLoop } from './core/GameLoop.js';
 
-let app = new PIXI.Application({resizeTo: window});
-document.body.appendChild(app.view);
+const app = new App().getApp();
+const game = new Game(app);
+const gameLoop = new GameLoop(game);
 
-// loads a sprite
-let sprite = PIXI.Sprite.from(bgImage);
-
-// adds the sprite to the stage (scene)
-app.stage.addChild(sprite);
+gameLoop.run();
 

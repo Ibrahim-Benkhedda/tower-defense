@@ -1,6 +1,6 @@
 import * as PIXI from 'pixi.js';
-import { spriteLoader } from './SpriteLoader.js' 
-import { TowerAssets } from '../../assets/Assets.js';
+import { GameConfig } from './GameConfig.js'
+import { TowerManager } from '../entities/TowerManager.js';
 
 /**
  * @desc core class of the game, manages the initialization,
@@ -13,38 +13,46 @@ class Game {
      */
     constructor(app) {
         this.app = app;
-        this.towers = [];
+        this.counter = 0;
         
         // initialize game objects
         this.setup();
-                  
+        
+        this.mousePosition = { x: 0, y: 0 };
+
     }
+
+
 
     /**
      * @desc sets up the initial state of the game objects
      */
     setup() {
 
-        // example
-        this.towerSprite = spriteLoader.loadAnimatedSprite(
-            TowerAssets.stoneBase.data,
-            TowerAssets.stoneBase.texture
-        );
+        this.towerManager = new TowerManager();
 
-        this.towerSprite.x = this.app.screen.width / 2;
-        this.towerSprite.y = this.app.screen.height / 2;
-        this.towerSprite.anchor.set(0.5);
-        this.towerSprite.animationSpeed = 0.01;
+        const stoneTower = this.towerManager.createTower('stone', 2, 'catapult', 2);
+        const rockTower = this.towerManager.createTower('stone', 3, 'catapult', 3);
 
-        this.weaponSprite = spriteLoader.loadAnimatedSprite(
-            TowerAssets.catapultLevel3.data,
-            TowerAssets.catapultLevel3.texture
-        );
+        stoneTower.setPosition(100, 200);
+        rockTower.setPosition(200, 200);
+
+        //console.log(this.app);
+        console.log(this.towerManager.towers);
+
+
+        window.addEventListener('mousemove', (event) => {
+            // console.log("Mouse moved:", event.clientX, event.clientY);
+            this.mousePosition.x = event.clientX;
+            this.mousePosition.y = event.clientY;
+        });
+
+        window.addEventListener('keydown', (event) => {
+            if (event.code === 'Space') {
+                this.addTower();
+            }
+        });
         
-        this.weaponSprite.x = this.app.screen.width / 2;
-        this.weaponSprite.y = this.app.screen.height / 2;
-        this.weaponSprite.anchor.set(0.5);
-        this.weaponSprite.animationSpeed = 0.25;
     }
 
     /**
@@ -52,6 +60,7 @@ class Game {
      */
     processInput() {
         // code to process user inputs such as keyboard and mouse should be added here
+
     }
 
     /**
@@ -61,10 +70,8 @@ class Game {
         // code to update game state should be added here,
         // such as position of objects, collision detection, etc.  
         
-        // example 
-        this.towerSprite.play();
-        this.weaponSprite.play();
-        this.weaponSprite.rotation += 0.01;
+        this.towerManager.updateTowers();
+        // console.log(this.mousePosition)
     }
 
     /**
@@ -72,13 +79,31 @@ class Game {
      */
     render() {
         // code to render game objects should be added here
+        this.towerManager.renderTowers(this.app);
+    }
 
-        // example
-        this.app.stage.addChild(this.towerSprite);
-        this.app.stage.addChild(this.weaponSprite);  
+    mouseMoved(event) { 
+        const rect = this.app.view.getBoundingClientRect();
+        this.mousePosition.x = event.clientX - rect.left;
+        this.mousePosition.y = event.clientY - rect.top;
+        
+        // console.log(this.mousePosition); // Debug
+    }
+
+    keyDownPressed(event) {
+        console.log(event.clientX);
+        if (event.code == 'Space') {
+            this.processInput();
+            this.addTower();
+        }
     }
 
 
+    addTower() {
+        const newTower = this.towerManager.createTower('stone', 1, 'catapult', 1);
+        newTower.setPosition(this.mousePosition.x, this.mousePosition.y);
+    }
+
 }
 
-export {Game}
+export { Game }

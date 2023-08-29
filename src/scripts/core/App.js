@@ -1,4 +1,6 @@
 import * as PIXI from 'pixi.js';
+
+
 /**
  * @desc class that is responsible for configuring the main PIXI application
  */
@@ -19,8 +21,8 @@ class App {
      * @returns {Object} PIXI application 
      */
     getApp() {
-        return this.app;
+        return this.app; 
     }
 }
 
-export {App}
+export { App }

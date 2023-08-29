@@ -37,7 +37,6 @@ class GameLoop {
             this.game.update();
             this.game.render();
             
-            console.log("looping");
 
             requestAnimationFrame(() => this.loop());
         }
@@ -53,4 +52,4 @@ class GameLoop {
 
 }
 
-export {GameLoop}
+export { GameLoop }

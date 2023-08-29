@@ -28,13 +28,17 @@ class SpriteLoader {
     }
 
     /**
-     * @desc loads a static sprite from the texture path
-     * @param {string} texturePath - path for the texture file 
+     * @desc loads a static sprite from either a texture path or a PIXI Texture object.
+     * @param {string || PIXI.Texture} textureOrPath - path for the texture file or loaded texture
      * @returns {PIXI.Sprite} - loaded static sprite 
      */
-    loadStaticSprite(texturePath) {
-        const texture = this.loadTexture(texturePath);
-        return new PIXI.Sprite(texture);
+    loadStaticSprite(textureOrPath) {
+        if (textureOrPath instanceof PIXI.Texture) {
+            return new PIXI.Sprite(textureOrPath)
+        }
+
+        const texture = this.loadTexture(textureOrPath);
+        return new PIXI.Sprite(texture);       
     }
 
     /**
@@ -43,7 +47,7 @@ class SpriteLoader {
      * @param {string} texturePath - path for the texture file
      * @returns {PIXI.AnimatedSprite} - loaded animated sprite
      */
-    loadAnimatedSprite(jsonData, texturePath) {
+    loadAnimatedSprite(jsonData, texturePath) {     
         const frames = [];
         const texture = this.loadTexture(texturePath);
 
@@ -59,6 +63,24 @@ class SpriteLoader {
 
         // create the animated sprite using the frames array and return it 
         return new PIXI.AnimatedSprite(frames);
+    }
+
+    /**
+     * @desc loads a static sprite from JSON frames data and texture path
+     * @param {Object} frameData - JSON object that contains the frame data
+     * @param {string} texturePath - path for the texture file
+     * @returns {PIXI.Sprite} - loaded static sprite
+     */
+    loadTextureFromFrame(frameData, texturePath) {
+        const texture = this.loadTexture(texturePath);
+
+        // extract the properties from the frame data
+        const { x, y, w, h } = frameData.frame;
+        
+        // create a new texture with the given dimensions
+        const frame = new PIXI.Texture(texture.baseTexture, new PIXI.Rectangle(x, y, w, h));
+
+        return frame;
     }
 
     

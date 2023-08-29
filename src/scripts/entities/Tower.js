@@ -1,11 +1,16 @@
 import * as PIXI from 'pixi.js';
 import { offsets } from "../assetsConfig/towers/config";
 import { IdleState, AimingState, ShootingState, ReloadingState, DestroyedState } from '../states/towerStates/TowerStates.js';
+
+/**
+ * Tower class represents the tower in game.
+ * The class manages the position, the state and the behaviour of tower.
+ */
 export class Tower {
     /**
-     * @desc 
-     * @param {} base 
-     * @param {} weapon 
+     * @desc create new instance of the tower class
+     * @param {TowerBase} base - the base part of the tower
+     * @param {TowerWeapon} weapon - the weapon part of the tower
      */
     constructor(base, weapon) {
         this.base = base;
@@ -24,9 +29,9 @@ export class Tower {
     }
 
     /**
-     * @desc 
-     * @param {} x 
-     * @param {} y 
+     * @desc sets the tower position to the given x and y coordinates
+     * @param {number} x - x coordinate of the tower
+     * @param {number} y - y coordinate of the tower
      */
     setPosition(x, y) {
           
@@ -47,14 +52,16 @@ export class Tower {
     }
 
     /**
-     * @desc 
-     * @param {} state 
+     * @desc change the current state of the tower
+     * @param {string} state - the new state to change to
      */
     setState(state) {
+        // checks if the current state exists to exit the state
         if (this.currentState) {
             this.currentState.exit(this);
         }       
 
+        // switch to the new state
         switch (state) {
             case 'idle':
                 this.currentState = new IdleState();
@@ -75,16 +82,18 @@ export class Tower {
                 throw new Error('state does not exist for this tower');
         }
 
+        // enter the new state 
         this.currentState.enter(this);
     }
 
     /**
-     * @desc 
-     * @param {} base 
-     * @param {} weapon 
-     * @returns 
+     * @desc computes the offset position of the weapon relative to the base
+     * @param {TowerBase} base - the base part of the tower.
+     * @param {TowerWeapon} weapon - the weapon part of the tower.
+     * @returns {Object} - the x and y offsets for the weapon
      */
     getWeaponOffset(base, weapon) {
+        // store the key to look up the offset for the given weapon and base type and level
         const offsetKey = `${base.type}_${base.level}_${weapon.type}_${weapon.level}`;
         return offsets[offsetKey];
     }

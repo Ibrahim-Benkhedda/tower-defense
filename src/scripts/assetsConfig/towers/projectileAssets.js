@@ -1,5 +1,5 @@
-import catapultImpactData from '../../../../assets/sprites/towers/weapon-impact.json';
-import catapultImpactTexture from '../../../../assets/sprites/towers/weapon-impact.png';
+import catapultImpactData from '../../../assets/sprites/towers/weapon-impact.json';
+import catapultImpactTexture from '../../../assets/sprites/towers/weapon-impact.png';
 import spellImpactDataLevel1 from '../../../assets/sprites/towers/Tower 05 - Level 01 - Projectile - Impact.json';
 import spellImpactDataLevel2 from '../../../assets/sprites/towers/Tower 05 - Level 02 - Projectile - Impact.json';
 import spellImpactDataLevel3 from '../../../assets/sprites/towers/Tower 05 - Level 03 - Projectile - Impact.json';

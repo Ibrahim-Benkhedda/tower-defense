@@ -23,7 +23,14 @@ module.exports = {
             },
             {
                 test: /\.(png|mp3|jpe?g)$/i,
-                use: "file-loader"
+                use: [
+                    {
+                        loader: 'file-loader',
+                        options: {
+                            name: 'assets/[name].[ext]',
+                        },
+                    },
+                ],
             }
         ]
     },

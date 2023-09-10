@@ -1,7 +1,7 @@
 import * as PIXI from 'pixi.js';
 
 /**
- * Class for loading static and animated sprites resources
+ * @desc Class for loading static and animated sprites resources
  */
 class SpriteLoader {
     constructor() {
@@ -51,7 +51,7 @@ class SpriteLoader {
         const frames = [];
         const texture = this.loadTexture(texturePath);
 
-        // Create texture for each frames in the json object
+        // create texture for each frames in the json object
         for (let frameData of Object.values(jsonData.frames)) {
             // get the properties from the frame data
             const { x, y, w, h } = frameData.frame;
@@ -84,6 +84,31 @@ class SpriteLoader {
     }
 
     
+    /**
+     * @desc loads an animated sprite from the JSON spritesheet data and texture path, 
+     * based on the specified frame tag data.
+     * @param {Object} jsonData - JSON object that contains the sprite frames
+     * @param {string} texturePath - path for the texture file
+     * @param {Object} tagData - the frame tag data (e.g., {from: 0, to: 3})
+     * @returns {PIXI.AnimatedSprite} - loaded animated sprite
+     */
+    loadAnimatedSpriteByTag(jsonData, texturePath, tagData) {
+        const frames = [];
+        const texture = this.loadTexture(texturePath);
+
+        // loop through the frames for the specified tag
+        for (let i = tagData.from; i <= tagData.to; i++) {
+            const frameData = jsonData.frames[i];
+            // extract the properties from the frame data
+            const { x, y, w, h } = frameData.frame;
+            // create a new texture with the given dimensions
+            const frame = new PIXI.Texture(texture.baseTexture, new PIXI.Rectangle(x, y, w, h));
+            frames.push(frame);
+        }
+
+        // create the animated sprite using the frames array and return it 
+        return new PIXI.AnimatedSprite(frames);
+    }
 }
 
 

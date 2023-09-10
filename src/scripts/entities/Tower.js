@@ -22,9 +22,14 @@ export class Tower {
         this.container.addChild(this.base.sprite);
         this.container.addChild(this.weapon.sprite);
 
+        this.x = this.container.x;
+        this.y = this.container.y;
 
         this.currentState = new IdleState();
         this.currentState.enter(this);
+        this.isStateChanging = false;
+
+        this.target = null;
         
     }
 
@@ -34,21 +39,25 @@ export class Tower {
      * @param {number} y - y coordinate of the tower
      */
     setPosition(x, y) {
-          
-        this.base.setPosition(x, y);
-
+        const offsetX = -20;
+        const offsetY = -100;
+        
+        this.base.setPosition(x + offsetX, y + offsetY);
+    
         const weaponOffset = this.getWeaponOffset(this.base, this.weapon);
-        // checks if weaponOffset returned an object,
-        // then sets the position of the weapon relative,
-        // to the base. If no object was returned, 
-        // the position of the weapon will be set without offset as a fallback.
+    
         if (weaponOffset) {
-            this.weapon.setPosition(x + weaponOffset.x, y + weaponOffset.y);
+            this.weapon.setPosition(
+                x + offsetX + weaponOffset.x,
+                y + offsetY + weaponOffset.y
+            );
         }
         else {
-            this.weapon.setPosition(x, y);
+            this.weapon.setPosition(x + offsetX, y + offsetY);
         }
-        
+    
+        this.x = x;
+        this.y = y;
     }
 
     /**
@@ -57,6 +66,12 @@ export class Tower {
      */
     setState(state) {
         // checks if the current state exists to exit the state
+        //  console.log('Current State:', this.currentState.constructor.name);
+
+        if (this.isStateChanging) return;
+
+        this.isStateChanging = true;
+
         if (this.currentState) {
             this.currentState.exit(this);
         }       
@@ -84,6 +99,9 @@ export class Tower {
 
         // enter the new state 
         this.currentState.enter(this);
+        this.isStateChanging = false;
+
+        // console.log('New State:', this.currentState.constructor.name);
     }
 
     /**
@@ -96,6 +114,15 @@ export class Tower {
         // store the key to look up the offset for the given weapon and base type and level
         const offsetKey = `${base.type}_${base.level}_${weapon.type}_${weapon.level}`;
         return offsets[offsetKey];
+    }
+
+    setTarget(target) {
+        this.target = target;
+    }
+
+
+    getTarget() {
+        return this.target;
     }
 
     /**

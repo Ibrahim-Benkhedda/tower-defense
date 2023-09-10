@@ -8,6 +8,7 @@
         "start": "webpack-dev-server --config webpack/base.js --open"
     },
     "dependencies": {
+        "howler": "^2.2.3",
         "pixi.js": "^7.2.4"
     },
     "devDependencies": {

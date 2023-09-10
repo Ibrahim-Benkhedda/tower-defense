@@ -1,10 +1,14 @@
 import { spriteLoader } from '../core/SpriteLoader.js';
 import { TowerAssets } from '../assetsConfig/towers/config.js';
-export class TowerBase {
+
+/**
+ * @desc Class that reprense
+ */
+class TowerBase {
     /**
-     * 
-     * @param {} type 
-     * @param {} level 
+     * Creates a Base Entity for the Tower
+     * @param {string} type 
+     * @param {string} level 
      */
     constructor(type, level) {
         this.type = type;
@@ -16,18 +20,20 @@ export class TowerBase {
     }
 
     /**
-     * @desc 
-     * @param {} x 
-     * @param {} y 
+     * @desc sets the position of the base
+     * @param {number} x - x position of the base
+     * @param {number} y - y position of the base
      */
     setPosition(x, y) {
         this.sprite.x = x;
         this.sprite.y = y;
     }
 
+    
+
     /**
-     * @desc 
-     * @param {} app 
+     * @desc renders the tower base 
+     * @param {Object} app - application where the sprite will be rendered
      */
     render(app) {
         app.stage.addChild(this.sprite);
@@ -38,3 +44,6 @@ export class TowerBase {
         // code to handle the destruction of the base
     }
 }
+
+
+export { TowerBase };

@@ -9,6 +9,10 @@ class DestroyedState extends TowerState {
     update(tower) {
         // Aim and transition to shooting state if ready
     }
+
+    exit(tower) {
+        
+    }
 }
 
 

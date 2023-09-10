@@ -21,4 +21,18 @@ const projectiles = {
     }
 }
 
+
+const impacts = {
+    bolt: {
+        data: catapultImpactData,
+        texture: catapultImpactTexture
+    },
+
+    magic: {
+        1: {data: spellImpactDataLevel1, texture: spellImpactTextureLevel1},
+        2: {data: spellImpactDataLevel2, texture: spellImpactTextureLevel2},
+        3: {data: spellImpactDataLevel3, texture: spellImpactTextureLevel3}
+    }
+}
+
 export { projectiles };

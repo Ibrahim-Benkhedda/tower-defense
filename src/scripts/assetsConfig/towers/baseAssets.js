@@ -3,8 +3,8 @@ import { spriteLoader } from '../../core/SpriteLoader.js';
 import baseData from '../../../assets/sprites/towers/Tower.json';
 import baseTexturePath from '../../../assets/sprites/towers/Tower.png';
 
-import mageBaseData from '../../../assets/sprites/towers/MageTower.json';
-import mageBaseTexture from '../../../assets/sprites/towers/MageTower.png';
+import mageBaseData from '../../../assets/sprites/towers/WizardTower.json';
+import mageBaseTexture from '../../../assets/sprites/towers/WizardTower.png';
 
 // extract the frames for each level from the baseData
 const stoneLevel1 = spriteLoader.loadTextureFromFrame(baseData.frames['tower-0.aseprite'], baseTexturePath);

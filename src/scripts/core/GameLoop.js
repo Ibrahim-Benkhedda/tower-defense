@@ -1,4 +1,4 @@
-import * as PIXI from 'pixi.js';
+import { eventEmitter } from "./EventEmitter";
 
 /**
  * @desc class that runs continuously during gameplay, by
@@ -14,6 +14,10 @@ class GameLoop {
         this.game = game;
         // checks if the game loop is running
         this.isRunning = false;
+        eventEmitter.on('gameOver', () => {
+            console.log('Game Over')
+            this.stop();
+        });
     }
 
     /**
@@ -31,14 +35,13 @@ class GameLoop {
      */
     loop() {
         if (this.isRunning) {
-            
-
             this.game.processInput();
             this.game.update();
             this.game.render();
             
+            const animationId = requestAnimationFrame(() => this.loop());
 
-            requestAnimationFrame(() => this.loop());
+            
         }
     }
 

@@ -1,6 +1,6 @@
 import * as PIXI from 'pixi.js';
 import { spriteLoader } from '../core/SpriteLoader';
-import { EnemyAssets } from '../assetsConfig/enemies/config';
+import { enemyAssets } from '../assetsConfig/enemies/config.js';
 
 /**
  * @desc class that represents the enemy entity. 
@@ -19,6 +19,20 @@ class Enemy {
         this.speed = speed;
         this.currentPathIndex = 0;
         this.path = path; // Store the path
+        this.health = 100;
+
+        // Initialize the enemy sprite
+        this.enemySprite = spriteLoader.loadAnimatedSprite(
+            enemyAssets.goblin.data,
+            enemyAssets.goblin.texture,
+        );
+        this.enemySprite.anchor.set(0.5);
+        this.enemySprite.x = this.x;
+        this.enemySprite.y = this.y;
+        this.enemySprite.animationSpeed = 0.1;
+        this.enemySprite.play();
+        this.enemySprite.scale.x = 2;
+        this.enemySprite.scale.y = 2;
     }
 
     /**
@@ -44,16 +58,22 @@ class Enemy {
      * @param {Object} stage - PIXI stage where the enemy is rendered.
      */
     render(stage) {
-        // create PIXI graphics object for this enemy
-        this.graphic = new PIXI.Graphics();
-        this.graphic.beginFill(0x00FF00); // green
-        this.graphic.drawRect(0, 0, 50, 50); // x, y, width, height
-        this.graphic.endFill();
 
-        this.graphic.x = this.x;
-        this.graphic.y = this.y;
+        // Add the sprite to the stage
+        stage.addChild(this.enemySprite);
+        // Update the enemy sprite coordinates
+        this.enemySprite.x = this.x;
+        this.enemySprite.y = this.y;
+ 
+        this.healthBar = new PIXI.Graphics();
+        this.healthBar.beginFill(0xFF0000);
+        this.healthBar.drawRect(-this.health / 2, 0, this.health, 10);
+        this.healthBar.endFill();
 
-        stage.addChild(this.graphic);
+        this.healthBar.x = this.x - 5;
+        this.healthBar.y = this.y - 20;
+
+        stage.addChild(this.healthBar);
     }
 
     /**
@@ -119,6 +139,15 @@ class Enemy {
     }
 
     
+    // method to decrease health
+    decreaseHealth(damage) {
+        this.health -= damage;
+        if (this.health <= 0) {
+            // logic for when the enemy is killed
+            this.health = 0;
+            console.log('enemy killed');
+        }
+    }
 }
 
 

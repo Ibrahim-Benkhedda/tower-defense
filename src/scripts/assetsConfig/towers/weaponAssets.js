@@ -1,16 +1,16 @@
-import weapon1Data from '../../../assets/sprites/towers/weapon-level-1.json';
-import weapon2Data from '../../../assets/sprites/towers/weapon-level-2.json';
-import weapon3Data from '../../../assets/sprites/towers/weapon-level-3.json';
-import weapon1Texture from '../../../assets/sprites/towers/weapon-level-1.png';
-import weapon2Texture from '../../../assets/sprites/towers/weapon-level-2.png';
-import weapon3Texture from '../../../assets/sprites/towers/weapon-level-3.png';
+import weapon1Data from '../../../assets/sprites/towers/catapult-level-1.json';
+import weapon2Data from '../../../assets/sprites/towers/catapult-level-2.json';
+import weapon3Data from '../../../assets/sprites/towers/catapult-level-3.json';
+import weapon1Texture from '../../../assets/sprites/towers/catapult-level-1.png';
+import weapon2Texture from '../../../assets/sprites/towers/catapult-level-2.png';
+import weapon3Texture from '../../../assets/sprites/towers/catapult-level-3.png';
 
-import spellDataLevel1 from '../../../assets/sprites/towers/Tower 05 - Level 01 - Weapon.json';
-import spellDataLevel2 from '../../../assets/sprites/towers/Tower 05 - Level 02 - Weapon.json';
-import spellDataLevel3 from '../../../assets/sprites/towers/Tower 05 - Level 03 - Weapon.json';
-import spellTextureLevel1 from '../../../assets/sprites/towers/Tower 05 - Level 01 - Weapon.png';
-import spellTextureLevel2 from '../../../assets/sprites/towers/Tower 05 - Level 02 - Weapon.png';
-import spellTextureLevel3 from '../../../assets/sprites/towers/Tower 05 - Level 03 - Weapon.png';
+import spellDataLevel1 from '../../../assets/sprites/towers/Wizard - Level 01 - Weapon.json';
+import spellDataLevel2 from '../../../assets/sprites/towers/Wizard - Level 02 - Weapon.json';
+import spellDataLevel3 from '../../../assets/sprites/towers/Wizard - Level 03 - Weapon.json';
+import spellTextureLevel1 from '../../../assets/sprites/towers/Wizard - Level 01 - Weapon.png';
+import spellTextureLevel2 from '../../../assets/sprites/towers/Wizard - Level 02 - Weapon.png';
+import spellTextureLevel3 from '../../../assets/sprites/towers/Wizard - Level 03 - Weapon.png';
 
 const weapons = {
     catapult: {

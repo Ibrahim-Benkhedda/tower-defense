@@ -11,33 +11,28 @@ class Projectile {
      * @desc creates a new Projectile
      * @param {number} startX starting x position
      * @param {number} startY starting y positoin
-     * @param {number} endX target x position
-     * @param {number} endY target y position
+     * @param {Object} target Enemy entity object
      * @param {number} speed speed of the projectile
      */
-    constructor(startX, startY, endX, endY, speed=1) {
-        this.x = startX;
-        this.y = startY;
-
-        this.target = {
-            x: endX,
-            y: endY
-        }
+    constructor(start, target, type='bolt', level='1') {
+        this.x = start.x;
+        this.y = start.y;
+        this.target = target;
 
         this.velocity = {x: 0, y: 0};
-        this.speed = speed;
+        this.radius = 25;
 
-        // computes the center point of the projectile
-        this.center = {
-            x: this.x + GameConfig.TILE_SIZE / 2,
-            y: this.y + GameConfig.TILE_SIZE / 2
-        }
-
-        // create PIXI graphics object for this projectile
-        this.graphic = new PIXI.Graphics();
-        this.graphic.beginFill(0xFF0000); // red
-        this.graphic.drawCircle(0, 0, 5);
-        this.graphic.endFill();
+        this.sprite = spriteLoader.loadAnimatedSprite(
+            TowerAssets.projectiles[type][level].data,
+            TowerAssets.projectiles[type][level].texture
+        )
+        
+        this.sprite.x = this.x;
+        this.sprite.y = this.y;
+        this.sprite.anchor.set(0.5);
+        this.sprite.loop = true;
+        // Start the animation
+        this.sprite.play();
     }
 
 
@@ -45,26 +40,30 @@ class Projectile {
      * @desc updates the position of the projectile
      */
     update() {
-        const distance = this.computeDistanceToPoint(this.target);
+        const distance = this.computeDistanceToPoint({ x: this.target.x, y: this.target.y });
         
         // gets the angle between the projectile and the target
         const angle = Math.atan2(distance.y, distance.x);
         
+        this.sprite.rotation = angle + (Math.PI / 2);
+
         // updates the velocity based on the angle
         this.velocity.x = Math.cos(angle);
         this.velocity.y = Math.sin(angle);
 
         this.x += this.velocity.x * 5;
         this.y += this.velocity.y * 5;
+
+        
     }
 
     /**
      * @desc renders the projectile to the stage.
      */
-    render(app) {
-        this.graphic.x = this.x;
-        this.graphic.y = this.y;
-        app.stage.addChild(this.graphic);
+    render(stage) {
+        this.sprite.x = this.x;
+        this.sprite.y = this.y;
+        stage.addChild(this.sprite);
     }
 
 

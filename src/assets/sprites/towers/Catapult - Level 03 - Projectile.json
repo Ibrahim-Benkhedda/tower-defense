@@ -1,0 +1,49 @@
+{ "frames": {
+   "Tower 06 - Level 03 - Projectile 0.aseprite": {
+    "frame": { "x": 0, "y": 0, "w": 10, "h": 37 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 10, "h": 37 },
+    "sourceSize": { "w": 10, "h": 37 },
+    "duration": 100
+   },
+   "Tower 06 - Level 03 - Projectile 1.aseprite": {
+    "frame": { "x": 10, "y": 0, "w": 10, "h": 37 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 10, "h": 37 },
+    "sourceSize": { "w": 10, "h": 37 },
+    "duration": 100
+   },
+   "Tower 06 - Level 03 - Projectile 2.aseprite": {
+    "frame": { "x": 20, "y": 0, "w": 10, "h": 37 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 10, "h": 37 },
+    "sourceSize": { "w": 10, "h": 37 },
+    "duration": 100
+   },
+   "Tower 06 - Level 03 - Projectile 3.aseprite": {
+    "frame": { "x": 30, "y": 0, "w": 10, "h": 37 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 10, "h": 37 },
+    "sourceSize": { "w": 10, "h": 37 },
+    "duration": 100
+   }
+ },
+ "meta": {
+  "app": "https://www.aseprite.org/",
+  "version": "1.2.40-trial",
+  "format": "RGBA8888",
+  "size": { "w": 40, "h": 37 },
+  "scale": "1",
+  "frameTags": [
+  ],
+  "layers": [
+   { "name": "Layer 1", "opacity": 255, "blendMode": "normal" }
+  ],
+  "slices": [
+  ]
+ }
+}

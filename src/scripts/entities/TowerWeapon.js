@@ -2,7 +2,8 @@ import { spriteLoader } from '../core/SpriteLoader.js';
 import { TowerAssets } from "../assetsConfig/towers/config.js";
 import { Projectile } from './Projectile.js';
 import { eventEmitter } from '../core/EventEmitter.js';
-import { isWithinRadius } from '../utils/helpers.js';
+import { isWithinRadius, makeid } from '../utils/helpers.js';
+import { GameConfig } from '../core/GameConfig.js';
 
 /**
  * @desc Clas that represents the weapon of the Tower Entity
@@ -18,7 +19,9 @@ class TowerWeapon {
     constructor(type, level) {
         this.type = type;
         this.level = level;
-        this.damage = 0;
+        this.damage = 15;
+        this.id = makeid(10);
+        this.angle = 1;
 
         // loads the the weapon sprite.
         this.sprite = spriteLoader.loadAnimatedSprite(
@@ -26,13 +29,8 @@ class TowerWeapon {
             TowerAssets.weapons[type][level].texture
         );
 
-        // register an event listener for shooting
-        eventEmitter.on('shoot', (data) => {
-            this.shootAt(data.targetX, data.targetY);
-        });
-
         // position for the weapon
-        this.position = {x: this.sprite.x, y: this.sprite.y};
+        this.position = { x: this.sprite.x, y: this.sprite.y };
 
         // boolean to check if the weapon is reloading
         this.isReloading = false;
@@ -45,8 +43,8 @@ class TowerWeapon {
      * @desc adds the weapon sprite to the PIXI app stage for rendering.
      * @param {PIXI.Application} app The PIXI application.
      */
-    render(app) {
-        app.stage.addChild(this.sprite);
+    render(stage) {
+        stage.addChild(this.sprite);
     }
 
 
@@ -68,11 +66,11 @@ class TowerWeapon {
     /**
      * @desc plays the shooting animation for the weapon
      */
-    playShootAnimation() {    
+    playShootAnimation() {
         this.sprite.loop = false; // don't loop the animation
         this.sprite.gotoAndPlay(0); // Start the animation
     }
-    
+
     /**
      * @desc checks if the given target is within the weapon radius
      * @param {Object} target - target to check
@@ -90,6 +88,10 @@ class TowerWeapon {
         // if target is in range, shoot
         if (this.isTargetInRange(target)) {
             console.log('Target is in range.');
+            const distance = this.computeDistanceToPoint(target);
+
+            // compute the angle between the tower weapon and the target
+            this.angle = Math.atan2(distance.y, distance.x);
         }
         else {
             console.log('target is out of range');
@@ -111,26 +113,53 @@ class TowerWeapon {
         setTimeout(() => {
             console.log('weapon reloaded');
             this.isReloading = false;
-            eventEmitter.emit('weaponReloaded');
+            this.sprite.gotoAndStop(0);
         }, duration);
 
     }
 
     /**
-     * @desc shoots a projectile at a given target position
-     * @param {number} targetX - The x position of the target
-     * @param {number} targetY - The y position of the target
+     * @desc Updates the sprite of the weapon based on its current type and level
+     * This method replaces the old sprite with a new sprite corresponding to
+     * the weapon's current type and level, while retaining the previous position.
      */
-    shootAt(targetX, targetY) {
-        const startX = this.sprite.x;
-        const startY = this.sprite.y;
+    updateSprite() {
+        // save the old position of the sprite
+        const oldX = this.sprite.x;
+        const oldY = this.sprite.y;
 
-        const projectile = new Projectile(startX, startY, targetX, targetY);
-        
-        // event to indicate that projectile has been created.
-        eventEmitter.emit('projectileCreated', projectile);
+        // moad a new sprite based on the weapon's type and level
+        this.sprite = spriteLoader.loadAnimatedSprite(
+            TowerAssets.weapons[this.type][this.level].data,
+            TowerAssets.weapons[this.type][this.level].texture
+        );
+
+        // set the new sprite's position to the old sprite's position
+        this.setPosition(oldX, oldY);
     }
 
+    /**
+     * @desc checks if the weapon can be leveled up based on the game's config
+     * @returns {boolean} True if the weapon can be leveled up, else return false
+     */
+    canLevelUp() {
+        // Check if the weapon level is below the maximum level allowed
+        // for either the catapult or spell types
+        return this.level < GameConfig.MAX_WEAPON_LEVEL.catapult ||
+               this.level < GameConfig.MAX_WEAPON_LEVEL.spell;
+    }
+
+    /**
+     * @desc Compute the distance from tower to the target point
+     * @param {Object} target  target point with x and y coordinates
+     * @returns {Object} returns x and y distance from the tower to the target point
+     */
+    computeDistanceToPoint(target) {
+        return {
+            x: target.x - this.x,
+            y: target.y - this.y
+        };
+    }
 
 }
 

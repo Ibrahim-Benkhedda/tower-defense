@@ -22,12 +22,23 @@ module.exports = {
                 }
             },
             {
-                test: /\.(png|mp3|jpe?g)$/i,
+                test: /\.(png|jpe?g)$/i,
                 use: [
                     {
                         loader: 'file-loader',
                         options: {
-                            name: 'assets/[name].[ext]',
+                            name: 'images/[name].[ext]',
+                        },
+                    },
+                ],
+            },
+            {
+                test: /\.(mp3|wav)$/i,
+                use: [
+                    {
+                        loader: 'file-loader',
+                        options: {
+                            name: 'sounds/[name].[ext]',
                         },
                     },
                 ],

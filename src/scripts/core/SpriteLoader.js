@@ -89,7 +89,7 @@ class SpriteLoader {
      * based on the specified frame tag data.
      * @param {Object} jsonData - JSON object that contains the sprite frames
      * @param {string} texturePath - path for the texture file
-     * @param {Object} tagData - the frame tag data (e.g., {from: 0, to: 3})
+     * @param {Object} tagData - the frame tag data
      * @returns {PIXI.AnimatedSprite} - loaded animated sprite
      */
     loadAnimatedSpriteByTag(jsonData, texturePath, tagData) {
@@ -98,7 +98,9 @@ class SpriteLoader {
 
         // loop through the frames for the specified tag
         for (let i = tagData.from; i <= tagData.to; i++) {
+            
             const frameData = jsonData.frames[i];
+            console.log(jsonData.frames);
             // extract the properties from the frame data
             const { x, y, w, h } = frameData.frame;
             // create a new texture with the given dimensions

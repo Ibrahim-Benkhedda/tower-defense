@@ -1,12 +1,10 @@
 import * as PIXI from 'pixi.js';
 import { GameConfig } from './GameConfig.js'
 import { GameMap } from './GameMap.js';
-import { WaypointManager } from '../managers/WaypointManager.js';
-import { TowerManager } from '../managers/TowerManager.js';
-import { ProjectileManager} from '../managers/ProjectileManager.js';
-import { EnemyManager } from '../managers/EnemyManager.js';
 import { eventEmitter } from './EventEmitter.js';
-
+import { ResourceUI } from '../ui/ResourceUI.js';
+import { sounds } from '../assetsConfig/tracks/config.js';
+import { EntityManager } from '../managers/EntityManager.js';
 /**
  * @desc core class of the game, manages the initialization,
  * input processing, updating, and rendering.
@@ -19,36 +17,17 @@ class Game {
     constructor(app) {
         this.app = app;
         this.counter = 0;
-        
+      
         // initialize game objects
-        this.setup();
-        
-        this.mousePosition = { x: 0, y: 0 };
-
-
-        this.colorMatrix = new PIXI.ColorMatrixFilter();
-
-        // post processing
-        this.colorMatrix.brightness(0.9, false);
-        this.colorMatrix.contrast(0.5, false);
-
-    }
-
-
-
-    /**
-     * @desc sets up the initial state of the game objects
-     */
-    setup() {
-
         this.map = new GameMap();
-        this.towerManager = new TowerManager();
-        this.projectileManager = new ProjectileManager();
-        this.waypointManager = new WaypointManager();
-        this.enemyManager = new EnemyManager();
         this.hearts = 3;
-        this.enemyManager.spawnEnemies();
+        this.golds = 75;
+        this.round = 1;
 
+
+        // initialize entities 
+        this.entityManager = new EntityManager();
+        this.entityManager.spawnEnemies(this.round);
 
         window.addEventListener('mousemove', (event) => {
             // console.log("Mouse moved:", event.clientX, event.clientY);
@@ -58,15 +37,15 @@ class Game {
 
         window.addEventListener('keydown', (event) => {
             if (event.code === 'Space') {
-                if (this.map.isValidTilePosition(this.mousePosition)) {
-                    this.addTower();
+                if (this.map.isValidTilePosition(this.mousePosition) && this.golds >= 25) {
+                    this.entityManager.addTower(this.mousePosition, this.app.stage);
 
+                    eventEmitter.emit('goldUsed', 25);
                     // https://www.reddit.com/r/gamedev/comments/1buxfz/zsorting_in_2d_games/
-                    this.towerManager.towers.sort((firstTower, secondTower) => {
+                    this.entityManager.towers.sort((firstTower, secondTower) => {
                         return firstTower.y - secondTower.y;
                     });
 
-                    console.log(this.towerManager.towers)
                 }
             }
 
@@ -74,13 +53,42 @@ class Game {
                 this.addProjectile();
             }
         });
-        
 
         eventEmitter.on('enemyReachedEnd', () => {
             this.hearts -= 1;
+            this.resourceUI.updateHearts(this.hearts);
         });
 
+        eventEmitter.on('goldUsed', (amount) => {
+            this.golds -= amount;
+            this.resourceUI.updateGold(this.golds);
+        });
+
+        eventEmitter.on('goldGained', (amount) => {
+            this.golds += amount;
+            this.resourceUI.updateGold(this.golds);
+        });
+
+        eventEmitter.on('roundEnd', () =>{
+            this.round++;
+            console.log('round ended, current round is', this.round);
+        });
+
+        this.mousePosition = { x: 0, y: 0 };
+
+        this.colorMatrix = new PIXI.ColorMatrixFilter();
+
+        // post processing
+        this.colorMatrix.brightness(0.9, false);
+        this.colorMatrix.contrast(0.5, false);
+
+        this.resourceUI = new ResourceUI(this.hearts, this.golds);
+        sounds.bgMusic.play();
     }
+
+
+
+        
 
     /**
      * @desc handles user input
@@ -97,15 +105,27 @@ class Game {
         // code to update game state should be added here,
         // such as position of objects, collision detection, etc.  
         
-        this.towerManager.updateTowers();
-        this.projectileManager.updateProjectiles();
-        this.enemyManager.updateEnemies();
+        this.entityManager.updateEntities();
         this.map.update(this.mousePosition);
-        // list all enemies,
-        eventEmitter.emit('allEnemies', this.enemyManager.enemies);
-        console.log(this.hearts);
+
+        console.log(this.hearts, this.golds);
     
-        
+        //console.log(this.entityManager.impactEffects);
+
+        if (this.hearts == 0) {
+            console.log('game over');
+            bgMusic.stop();
+            sounds.gameOverSFX.play();
+            eventEmitter.emit('gameOver');
+        }
+
+        // checks if there's no enemies left, if yes, increment and move to next round
+        if (this.entityManager.enemies.length == 0) {
+            console.log('round ended');
+            eventEmitter.emit('roundEnd');
+            this.entityManager.spawnEnemies(this.round);
+        }
+        console.log(this.entityManager.enemies.length);
     }
 
     /**
@@ -114,11 +134,9 @@ class Game {
     render() {
         // code to render game objects should be added here
         this.map.render(this.app.stage);
-        this.towerManager.renderTowers(this.app);
-        this.projectileManager.renderProjectiles(this.app);
-        this.enemyManager.renderEnemies(this.app.stage);
+        this.entityManager.renderEntities(this.app.stage);
         this.app.stage.filters = [this.colorMatrix];
-
+        this.resourceUI.render(this.app);
     }
 
     mouseMoved(event) { 
@@ -137,20 +155,8 @@ class Game {
         }
     }
 
-
-    addTower() {
-        const newTower = this.towerManager.createTower('stone', 1, 'catapult', 1);
-        newTower.setPosition(this.mousePosition.x, this.mousePosition.y);
-    }
-
-    addProjectile() {
-        const x1 = this.mousePosition.x;
-        const y1 = this.mousePosition.y;
-        const x2 = 600, y2 = 600;
-
-        const projectile = this.projectileManager.createProjectile(x1, y1, x2, y2, 5);
-        this.projectileManager.addProjectile(projectile);
-    }
+  
 }
+
 
 export { Game }

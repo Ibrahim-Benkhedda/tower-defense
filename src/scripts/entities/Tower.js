@@ -1,12 +1,14 @@
 import * as PIXI from 'pixi.js';
 import { offsets } from "../assetsConfig/towers/config";
-import { IdleState, AimingState, ShootingState, ReloadingState, DestroyedState } from '../states/towerStates/TowerStates.js';
+import { makeid } from '../utils/helpers';
+import { eventEmitter } from '../core/EventEmitter';
+import { sounds } from '../assetsConfig/tracks/config';
 
 /**
  * Tower class represents the tower in game.
  * The class manages the position, the state and the behaviour of tower.
  */
-export class Tower {
+class Tower {
     /**
      * @desc create new instance of the tower class
      * @param {TowerBase} base - the base part of the tower
@@ -15,6 +17,7 @@ export class Tower {
     constructor(base, weapon) {
         this.base = base;
         this.weapon = weapon;
+        this.id = makeid(10);
 
         // create a container to hold both base and weapon.
         this.container = new PIXI.Container();     
@@ -22,9 +25,10 @@ export class Tower {
         this.container.addChild(this.base.sprite);
         this.container.addChild(this.weapon.sprite);
 
+        this.x = this.container.x;
+        this.y = this.container.y;
 
-        this.currentState = new IdleState();
-        this.currentState.enter(this);
+        this.target = null;
         
     }
 
@@ -34,57 +38,27 @@ export class Tower {
      * @param {number} y - y coordinate of the tower
      */
     setPosition(x, y) {
-          
-        this.base.setPosition(x, y);
-
+        const offsetX = -20;
+        const offsetY = -100;
+        
+        this.base.setPosition(x + offsetX, y + offsetY);
+    
         const weaponOffset = this.getWeaponOffset(this.base, this.weapon);
-        // checks if weaponOffset returned an object,
-        // then sets the position of the weapon relative,
-        // to the base. If no object was returned, 
-        // the position of the weapon will be set without offset as a fallback.
+    
         if (weaponOffset) {
-            this.weapon.setPosition(x + weaponOffset.x, y + weaponOffset.y);
+            this.weapon.setPosition(
+                x + offsetX + weaponOffset.x,
+                y + offsetY + weaponOffset.y
+            );
         }
         else {
-            this.weapon.setPosition(x, y);
+            this.weapon.setPosition(x + offsetX, y + offsetY);
         }
-        
+    
+        this.x = x;
+        this.y = y;
     }
 
-    /**
-     * @desc change the current state of the tower
-     * @param {string} state - the new state to change to
-     */
-    setState(state) {
-        // checks if the current state exists to exit the state
-        if (this.currentState) {
-            this.currentState.exit(this);
-        }       
-
-        // switch to the new state
-        switch (state) {
-            case 'idle':
-                this.currentState = new IdleState();
-                break;
-            case 'aiming':
-                this.currentState = new AimingState();
-                break;
-            case 'shooting':
-                this.currentState = new ShootingState();
-                break;
-            case 'reloading':
-                this.currentState = new ReloadingState();
-                break;
-            case 'destroyed':
-                this.currentState = new DestroyedState();
-                break;
-            default:
-                throw new Error('state does not exist for this tower');
-        }
-
-        // enter the new state 
-        this.currentState.enter(this);
-    }
 
     /**
      * @desc computes the offset position of the weapon relative to the base
@@ -98,21 +72,77 @@ export class Tower {
         return offsets[offsetKey];
     }
 
+    setTarget(target) {
+        this.target = target;
+    }
+
+
+    getTarget() {
+        return this.target;
+    }
+
     /**
      * @desc update the rendering of the tower
      */
     update() {
         this.currentState.update(this);
+        console.log(this.id);
     }
 
     /**
      * @desc render the base and weapon of the tower
      */
-    render(app) {
-        this.base.render(app);
-        this.weapon.render(app);
+    render(stage) {
+        this.base.render(stage);
+        this.weapon.render(stage);
     }
 
+
+    /**
+     * @desc Levels up the base component of the tower if possible
+     * This method will increment the base's level, update its sprite, 
+     * and reposition the tower components accordingly.
+     */
+    levelUpBase() {
+        // Check if the base can be leveled up
+        if (this.base.canLevelUp()) {
+            // Increment the base level
+            this.base.level++;
+
+            // Play Sound effect of leveling up 
+            sounds.levelUpSFX.play();
+            
+            // Update the sprite of the base based on its new level
+            this.base.updateSprite();
+
+            // Reposition the tower components to align with the new sprite
+            this.setPosition(this.x, this.y);
+        }
+    }
+
+    /**
+     * @desc Levels up the weapon component of the tower if possible
+     * This method will increment the weapon's level, update its sprite, 
+     * and reposition the tower components accordingly.
+     */
+    levelUpWeapon() {
+        // Check if the weapon can be leveled up
+        if (this.weapon.canLevelUp()) {
+            // Increment the weapon level
+            this.weapon.level++;
+
+            // Play Sound effect of leveling up 
+            sounds.levelUpSFX.play();
+            // Update the sprite of the weapon based on its new level
+            this.weapon.updateSprite();
+
+            // Reposition the tower components to align with the new sprite
+            this.setPosition(this.x, this.y);
+        }
+    }
     
 }
+
+
+export {Tower};
 

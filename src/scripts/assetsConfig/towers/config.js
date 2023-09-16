@@ -1,6 +1,7 @@
 import { bases } from './baseAssets.js';
-import { projectiles } from './projectileAssets.js';
+import { projectiles, impacts } from './projectileAssets.js';
 import { weapons } from './weaponAssets.js';
+
 
 const offsets = {
     'stone_1_catapult_1': { x: 0, y: 15 },
@@ -15,7 +16,7 @@ const offsets = {
 }
 
 
-const TowerAssets = { bases, weapons, projectiles };
+const TowerAssets = { bases, weapons, projectiles, impacts };
 
 export { TowerAssets, offsets }
 

@@ -1,4 +1,3 @@
-import * as PIXI from 'pixi.js';
 import { App } from './core/App.js';
 import { Game } from './core/Game.js';
 import { GameLoop } from './core/GameLoop.js';

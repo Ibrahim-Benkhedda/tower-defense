@@ -22,8 +22,26 @@ module.exports = {
                 }
             },
             {
-                test: /\.(png|mp3|jpe?g)$/i,
-                use: "file-loader"
+                test: /\.(png|jpe?g)$/i,
+                use: [
+                    {
+                        loader: 'file-loader',
+                        options: {
+                            name: 'images/[name].[ext]',
+                        },
+                    },
+                ],
+            },
+            {
+                test: /\.(mp3|wav)$/i,
+                use: [
+                    {
+                        loader: 'file-loader',
+                        options: {
+                            name: 'sounds/[name].[ext]',
+                        },
+                    },
+                ],
             }
         ]
     },

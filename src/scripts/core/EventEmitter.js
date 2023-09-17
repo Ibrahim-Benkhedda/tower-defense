@@ -48,10 +48,14 @@ class EventEmitter {
     off(event, listener) {
         // Check if the event exists
         if (this.events[event]) {
-            // Filter out the listener that needs to be removed
-            this.events[event] = this.events[event].filter(l => l !== listener);
+            const index = this.events[event].indexOf(listener);
+            if (index > -1) {
+                this.events[event].splice(index, 1);
+            }
         }
     }
+
+    
 }
 
 

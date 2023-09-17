@@ -39,9 +39,8 @@ class GameLoop {
             this.game.update();
             this.game.render();
             
-            const animationId = requestAnimationFrame(() => this.loop());
+            requestAnimationFrame(() => this.loop());
 
-            
         }
     }
 

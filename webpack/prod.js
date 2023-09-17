@@ -1,3 +1,8 @@
+/**
+ * @desc this file sets up the basic configuration for the game production.
+ * this configuration is an extension of the base.js config.
+ */
+
 const merge = require("webpack-merge");
 const path = require("path");
 const base = require("./base");

@@ -104,6 +104,7 @@ class EntityManager {
                 this.enemies.splice(i, 1);
                 i--;
                 eventEmitter.emit('goldGained', 5);
+                eventEmitter.emit('enemyKilled');
                 
             }
 
@@ -253,11 +254,7 @@ class EntityManager {
         impactSprite.animationSpeed = 0.1; // You can adjust this value
         impactSprite.loop = false;
         impactSprite.anchor.set(0.5);
-        // Register for the 'complete' event
-        // impactSprite.onComplete = () => {
-        //   this.app.stage.removeChild(impactSprite);
-        // };
-    
+
         // Add the sprite to a list of impact effects to be rendered
         this.impactEffects.push(impactSprite);
 
@@ -290,11 +287,6 @@ class EntityManager {
                 stage.addChild(effect);
             }
         }
-    }
-
-
-    createProjectile(x1, y1, target, v) {
-        return new Projectile(x1, y1, target, v);
     }
 
     addProjectile(projectile) {

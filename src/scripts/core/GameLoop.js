@@ -7,7 +7,6 @@ import { eventEmitter } from "./EventEmitter";
 */
 class GameLoop {
     /**
-     * 
      * @param {Object} game - reference to the Game object
      */
     constructor(game) {
@@ -15,7 +14,6 @@ class GameLoop {
         // checks if the game loop is running
         this.isRunning = false;
         eventEmitter.on('gameOver', () => {
-            console.log('Game Over')
             this.stop();
         });
     }
@@ -53,5 +51,6 @@ class GameLoop {
 
 
 }
+
 
 export { GameLoop }

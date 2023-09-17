@@ -117,6 +117,9 @@ class Tower {
 
             // Reposition the tower components to align with the new sprite
             this.setPosition(this.x, this.y);
+
+            // deduct 30 gold from player
+            eventEmitter.emit('goldUsed', (30));
         }
     }
 
@@ -138,6 +141,9 @@ class Tower {
 
             // Reposition the tower components to align with the new sprite
             this.setPosition(this.x, this.y);
+
+            // deduct 30 gold from the player
+            eventEmitter.emit('goldUsed', (30));
         }
     }
     

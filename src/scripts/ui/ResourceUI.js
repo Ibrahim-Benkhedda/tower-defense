@@ -3,8 +3,16 @@ import { GameConfig } from '../core/GameConfig';
 import { miscAssets } from '../assetsConfig/misc/config';
 import { spriteLoader } from '../core/SpriteLoader';
 
+/**
+ * @desc Manages the UI elements for displaying resources like gold and health
+ */
 class ResourceUI {
-    constructor(starterHealth, starterGold) {
+    /**
+     * @desc Initializes the UI elements for displaying gold and health/heart.
+     * @param {number} starterHeart - Initial heart value
+     * @param {number} starterGold - Initial gold value
+     */
+    constructor(starterHeart, starterGold) {
         this.mainUI = new PIXI.Container();
 
         // Initialize Gold
@@ -14,7 +22,7 @@ class ResourceUI {
         this.goldText.y = 40;
         this.mainUI.addChild(this.goldText);
 
-        // Initialize Gold animated sprite
+        // create gold animated sprite
         this.goldSprite = spriteLoader.loadAnimatedSprite(
             miscAssets.coin.data,
             miscAssets.coin.texture
@@ -29,7 +37,7 @@ class ResourceUI {
         this.mainUI.addChild(this.goldSprite);
         
         // Initialize Health
-        this.heart = starterHealth;
+        this.heart = starterHeart;
         this.heartText = new PIXI.Text(`${this.heart}`, {fontSize: 24, fill: 0xFFFFFF});
         this.heartText.x = GameConfig.SCREEN_WIDTH - 200; // Position at top-right; // Position at top-right
         this.heartText.y = 10;
@@ -37,7 +45,7 @@ class ResourceUI {
 
         this.heartSprite = spriteLoader.loadStaticSprite(
             miscAssets.heart.texture
-        )
+        );
         this.heartSprite.x = this.heartText.x - GameConfig.TILE_SIZE * 1.6;
         this.heartSprite.y = -4;
         this.mainUI.addChild(this.heartSprite);
@@ -63,9 +71,16 @@ class ResourceUI {
         this.goldText.text = `${this.gold}`;
     }
 
-    render(app) {
-        app.stage.addChild(this.mainUI);
+    /**
+     * @desc Adds the main UI container to the PIXI stage.
+     * @param {PIXI.Container} stage - The PIXI stage for rendering.
+
+     */
+    render(stage) {
+        stage.addChild(this.mainUI);
     }
+
+
 }
 
 

@@ -39,3 +39,9 @@ This will generate a `dist` directory with the production files. To run the game
 live-server
 ```
 This will start a server and open your default browser to display the game. By default, it should be available at `http://localhost:8080`.
+
+## Unit testing 
+Run the following command for unit testing
+```
+npm test
+```

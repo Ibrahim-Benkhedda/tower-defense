@@ -69,7 +69,7 @@ class Game {
 
         // checks if no more hearts left, if yes, stop the game loop.
         if (this.hearts == 0) {
-            bgMusic.stop();
+            sounds.bgMusic.stop();
             sounds.gameOverSFX.play();
             eventEmitter.emit('gameOver');
         }
